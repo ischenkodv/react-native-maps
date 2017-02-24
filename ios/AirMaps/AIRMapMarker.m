@@ -221,7 +221,7 @@
 - (void)hideCalloutView
 {
     // hide the callout view
-    [self.map.calloutView dismissCalloutAnimated:YES];
+    [self.map.calloutView dismissCalloutAnimated:NO];
 
     [self setSelected:NO animated:NO];
 
