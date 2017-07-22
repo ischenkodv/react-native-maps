@@ -22,6 +22,7 @@
     BOOL _hasSetCalloutOffset;
     RCTImageLoaderCancellationBlock _reloadImageCancellationBlock;
     MKPinAnnotationView *_pinView;
+    MKAnnotationView *_customPinView;
 }
 
 - (void)reactSetFrame:(CGRect)frame
@@ -65,6 +66,16 @@
     }
 }
 
+// This function adds react subviews to the custom annotation view, instead of to the AIRMapMarker.
+- (void)didUpdateReactSubviews
+{
+    if (_customPinView != nil)  {
+        for (UIView *subview in self.reactSubviews) {
+            [_customPinView addSubview:subview];
+        }
+    }
+}
+
 - (MKAnnotationView *)getAnnotationView
 {
     if ([self shouldUsePinView]) {
@@ -87,12 +98,23 @@
 
         return _pinView;
     } else {
-        // If it has subviews, it means we are wanting to render a custom marker with arbitrary react views.
-        // if it has a non-null image, it means we want to render a custom marker with the image.
-        // In either case, we want to return the AIRMapMarker since it is both an MKAnnotation and an
-        // MKAnnotationView all at the same time.
-        self.layer.zPosition = self.zIndex;
-        return self;
+        // Create annotation view for custom marker.
+        if (_customPinView == nil)  {
+            _customPinView = [[MKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:nil];
+            [self addGestureRecognizerToView:_customPinView];
+            _customPinView.annotation = self;
+            for (UIView *subview in self.reactSubviews) {
+                [_customPinView addSubview:subview];
+            }
+        }
+
+        CGPoint annotationPoint = [self.map convertCoordinate:self.coordinate toPointToView:self.map];
+        CGRect frame = CGRectMake(annotationPoint.x - self.frame.size.width / 2, annotationPoint.y - self.frame.size.height / 2, self.frame.size.width, self.frame.size.height);
+        _customPinView.frame = frame;
+        _customPinView.bounds = self.bounds;
+        _customPinView.draggable = self.draggable;
+        _customPinView.layer.zPosition = self.zIndex;
+        return _customPinView;
     }
 }
 
