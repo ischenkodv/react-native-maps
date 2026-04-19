@@ -179,6 +179,30 @@ RCT_CUSTOM_VIEW_PROPERTY(camera, MKMapCamera*, AIRMap)
 
 #pragma mark exported MapView methods
 
+RCT_EXPORT_METHOD(startIOSNativeFollow:(nonnull NSNumber *)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        id view = viewRegistry[reactTag];
+        if (![view isKindOfClass:[AIRMap class]]) {
+            RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
+        } else {
+            AIRMap *mapView = (AIRMap *)view;
+            [mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(stopIOSNativeFollow:(nonnull NSNumber *)reactTag) {
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+        id view = viewRegistry[reactTag];
+        if (![view isKindOfClass:[AIRMap class]]) {
+            RCTLogError(@"Invalid view returned from registry, expecting AIRMap, got: %@", view);
+        } else {
+            AIRMap *mapView = (AIRMap *)view;
+            [mapView setUserTrackingMode:MKUserTrackingModeNone animated:YES];
+        }
+    }];
+}
+
 RCT_EXPORT_METHOD(getMapBoundaries:(nonnull NSNumber *)reactTag
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

@@ -70,6 +70,18 @@ interface NativeCommands {
     >,
     activeLevelIndex: number,
   ) => void;
+
+  startIOSNativeFollow: (
+    viewRef: NonNullable<
+      React.RefObject<MapViewNativeComponentType>['current']
+    >,
+  ) => void;
+
+  stopIOSNativeFollow: (
+    viewRef: NonNullable<
+      React.RefObject<MapViewNativeComponentType>['current']
+    >,
+  ) => void;
 }
 
 export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
@@ -82,5 +94,7 @@ export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
     'fitToCoordinates',
     'setMapBoundaries',
     'setIndoorActiveLevelIndex',
+    'startIOSNativeFollow',
+    'stopIOSNativeFollow',
   ],
 });
