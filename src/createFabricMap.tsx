@@ -46,6 +46,8 @@ export interface FabricMapHandle {
   getPointForCoordinate: (coordinate: LatLng) => Promise<Point>;
   getCoordinateForPoint: (point: Point) => Promise<LatLng>;
   setIndoorActiveLevelIndex: (activeLevelIndex: number) => void;
+  startIOSNativeFollow: () => void;
+  stopIOSNativeFollow: () => void;
 }
 
 const createFabricMap = (
@@ -229,6 +231,32 @@ const createFabricMap = (
           }
         } else {
           console.warn('setIndoorActiveLevelIndex is not supported.');
+        }
+      },
+      startIOSNativeFollow() {
+        if (fabricRef.current) {
+          try {
+            (Commands as any).startIOSNativeFollow(fabricRef.current);
+          } catch (error) {
+            throw new Error('Failed to startIOSNativeFollow');
+          }
+        } else {
+          throw new Error(
+            'startIOSNativeFollow is only supported on iOS with Fabric.',
+          );
+        }
+      },
+      stopIOSNativeFollow() {
+        if (fabricRef.current) {
+          try {
+            (Commands as any).stopIOSNativeFollow(fabricRef.current);
+          } catch (error) {
+            throw new Error('Failed to stopIOSNativeFollow');
+          }
+        } else {
+          throw new Error(
+            'stopIOSNativeFollow is only supported on iOS with Fabric.',
+          );
         }
       },
       setCamera(camera: Partial<Camera>) {

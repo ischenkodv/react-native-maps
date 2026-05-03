@@ -921,6 +921,24 @@ class MapView extends React.Component<MapViewProps, State> {
     }
   }
 
+  // iOS start native follow
+  startIOSNativeFollow() {
+    if (this.fabricMap.current) {
+      this.fabricMap.current.startIOSNativeFollow();
+    } else if (this.map.current) {
+      Commands.startIOSNativeFollow(this.map.current);
+    }
+  }
+
+  // iOS stop native follow
+  stopIOSNativeFollow() {
+    if (this.fabricMap.current) {
+      this.fabricMap.current.stopIOSNativeFollow();
+    } else if (this.map.current) {
+      Commands.stopIOSNativeFollow(this.map.current);
+    }
+  }
+
   /**
    * Get visible boudaries
    *

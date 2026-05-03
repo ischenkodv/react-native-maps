@@ -1110,6 +1110,14 @@ interface NativeCommands {
     viewRef: React.ElementRef<typeof FabricMapView>,
     activeLevelIndex: Int32,
   ) => void;
+
+  startIOSNativeFollow: (
+    viewRef: React.ElementRef<typeof FabricMapView>,
+  ) => void;
+
+  stopIOSNativeFollow: (
+    viewRef: React.ElementRef<typeof FabricMapView>,
+  ) => void;
 }
 
 export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
@@ -1121,6 +1129,8 @@ export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
     'fitToSuppliedMarkers',
     'fitToCoordinates',
     'setIndoorActiveLevelIndex',
+    'startIOSNativeFollow',
+    'stopIOSNativeFollow',
   ],
 });
 
